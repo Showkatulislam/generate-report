@@ -13,5 +13,3 @@ export const GetClients = async () => {
     return null;
   }
 };
-
-export default GetClients;

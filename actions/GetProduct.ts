@@ -14,4 +14,3 @@ export const GetProduct = async () => {
   }
 };
 
-export default GetProduct;

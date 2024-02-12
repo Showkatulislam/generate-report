@@ -23,9 +23,13 @@ const GenerateReport = ({clients }: GenerateReportProps) => {
     setReportId(has)
     if (!has) {
       const createReport = async () => {
-        const report = await axios.post("/api/report");
-        localStorage.setItem("reportId", report.data.id);
-        setReportId(report.data.id)
+        localStorage.getItem("reportId");
+        if(!has){
+         const report = await axios.post("/api/report");
+         localStorage.setItem("reportId", report.data.id);
+          setReportId(report.data.id)
+        }
+
       };
       createReport()
     }

@@ -1,4 +1,4 @@
-import GetClients from "@/actions/GetClients";
+import { GetClients } from "@/actions/GetClients";
 import GenerateReport from "./GenerateReport";
 const page = async() => {
   const clients=await GetClients()

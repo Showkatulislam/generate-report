@@ -1,6 +1,7 @@
 import { Title } from "@/components/Title";
 import { ShowProduct } from "./ShowProduct";
-import GetProduct from "@/actions/GetProduct";
+import { GetProduct } from "@/actions/GetProduct";
+
 
 const page =async() => {
 
