@@ -1,0 +1,221 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  name      String
+  email     String     @db.Text
+  role      MemberRole @default(GUEST)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum MemberRole {
+  ADMIN
+  GUEST
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String
+  address   String
+  contact1  String
+  contact2  String
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  productName String
+  country     String
+  language    String
+  price       String
+  products    Order[]
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  dob       String
+  priority  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId  String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([productId])
+}
+
+model Report {
+  id              String            @id @default(uuid())
+  orderdetail     OrderDetail?
+  cContact        CContact?
+  officalInfo     OfficalInfo?
+  shareholder     Shareholder[]
+  managers        Managers[]
+  capital         Capital[]
+  financialData   FinancialData[]
+  bank            Bank[]
+  commercialModel CommercialModel[]
+  analaysisModal  AnalaysisModal?
+}
+
+model OrderDetail {
+  id              String @id @default(uuid())
+  customer        String
+  object          String
+  reference       String
+  priority        String
+  tongue          String
+  creditRequested String
+  report          Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId        String @unique
+
+  @@index([reportId])
+}
+
+model CContact {
+  id           String @id @default(uuid())
+  denomination String
+  address      String
+  such         String
+  fax          String
+  cellPhone    String
+  email        String
+  website      String
+  reportId     String @unique
+  report       Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model OfficalInfo {
+  id               String   @id @default(uuid())
+  legalStatus      String
+  uniqueIdentifier String
+  creationDate     DateTime @default(now())
+  startActivity    String
+  activityStatus   String
+  shareCapital     Int
+  preShareCapital  Int
+  reportId         String   @unique
+  report           Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model Shareholder {
+  id          String @id @default(uuid())
+  name        String
+  share       Int
+  nationatity String
+  reportId    String
+  report      Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model Managers {
+  id          String @id @default(uuid())
+  name        String
+  companyName String
+  fuction     String
+  nationatity String
+  reportId    String
+  report      Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model Capital {
+  id                String @id @default(uuid())
+  sharecapital      String
+  sharecapitaltext  String
+  socialcapital     String
+  socialcapitaltext String
+  reportId          String
+  report            Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model FinancialData {
+  id                String @id @default(uuid())
+  turnover          Int
+  nprofit           Int
+  oprofit           Int
+  damorliztion      Int
+  equityballocation Int
+  supplieraccounts  Int
+  purchases         Int
+  clientaccounts    Int
+  stocks            Int
+  total             Int
+  reportId          String
+  report            Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model Bank {
+  id       String  @id @default(uuid())
+  name     String
+  branch   String
+  comment  String?
+  reportId String
+  report   Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model CommercialModel {
+  id             String @id @default(uuid())
+  importText     String
+  importTexSub   String
+  suppliersLocal String
+  exportText     String
+  exporttextSub  String
+  clientsLocal   String
+  reportId       String
+  report         Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model AnalaysisModal {
+  id                     String @id @default(uuid())
+  riskRating             String
+  paymentExperience      String
+  recommendCredit        String
+  recommendCreditText    String
+  equivalentToCredit     String
+  equivalentToCreditText String
+  NaceGroup              String
+  industrialSector       String
+  secondaryEstablishment String
+  officailpublication    String
+  largeScaleAffair       String
+  reportId               String @unique
+  report                 Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
